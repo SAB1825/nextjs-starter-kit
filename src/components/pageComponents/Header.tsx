@@ -1,15 +1,18 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "../themeProvider/themeToggle";
 import { SignedOut, SignInButton, useAuth, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
-  const { isSignedIn } = useAuth(); // Use the Clerk hook to get auth state
+  const { isSignedIn } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(isSignedIn);
+  const pathname = usePathname();
+
   useEffect(() => {
     setLoggedIn(isSignedIn);
   }, [isSignedIn]);
@@ -21,95 +24,97 @@ export default function Header() {
     { label: "Contact", href: "/contact" },
   ];
 
+  const showDashboardButton = loggedIn && pathname !== "/dashboard";
+
   return (
-    <header className="shadow-md">
+    <header>
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
               <h1 className="text-2xl font-bold">NetWeave</h1>
             </Link>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="hover:bg-gray-100 dark:hover:bg-[#111111] px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
           </div>
-          <div className="hidden md:flex items-center justify-between gap-6">
-            <ThemeToggle />
-            {loggedIn && (
-              <>
-                <Link href="/dashboard">
-                  <Button className="ml-4 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                    Dashboard
-                  </Button>
-                </Link>
-                <UserButton />
-              </>
-            )}
-            <SignedOut>
-              <SignInButton>
-                <Button className="ml-4 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                  Sign In
-                </Button>
-              </SignInButton>
-            </SignedOut>
-
-            
-          </div>
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-            >
-              <span className="sr-only">Open main menu</span>
-              <Menu className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      </nav>
-      {mobileMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="hover:bg-gray-100 dark:hover:bg-[#111111] block px-3 py-2 rounded-md text-base font-medium"
+                className="hover:bg-gray-100 dark:hover:bg-[#111111] px-3 py-2 rounded-md text-sm font-medium"
               >
                 {item.label}
               </Link>
             ))}
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-200 dark:border-[#111111]">
-            <div className="flex items-center px-5">
-              <ThemeToggle />
-              {loggedIn && (
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            {loggedIn ? (
               <>
-                <Link href="/dashboard">
-                  <Button className="ml-4 mr-5 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                    Dashboard
-                  </Button>
-                </Link>
+                {showDashboardButton && (
+                  <Link href="/dashboard" className="hidden md:inline-block">
+                    <Button className="bg-blue-600 dark:bg-[#111111] text-white hover:bg-blue-700">
+                      Dashboard
+                    </Button>
+                  </Link>
+                )}
                 <UserButton />
               </>
+            ) : (
+              <SignedOut>
+                <SignInButton>
+                  <Button className="bg-blue-600 text-white hover:bg-blue-700">
+                    Sign In
+                  </Button>
+                </SignInButton>
+              </SignedOut>
             )}
-            <SignedOut>
-              <SignInButton>
-                <Button className="ml-4 bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                  Sign In
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              style={{ zIndex: 100 }}
+            >
+              <span className="sr-only">Open main menu</span>
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
+      </nav>
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90">
+          <div className="absolute top-4 right-4 z-50">
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+            >
+              
+            </button>
+          </div>
+          <div className="flex flex-col items-center justify-center h-full">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="hover:bg-gray-100 dark:hover:bg-[#111111] px-3 py-2 rounded-md text-lg font-medium my-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            {loggedIn && showDashboardButton && (
+              <Link
+                href="/dashboard"
+                className="mt-4"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Button className="bg-blue-600 dark:bg-[#111111] text-white hover:bg-blue-700">
+                  Dashboard
                 </Button>
-              </SignInButton>
-            </SignedOut>
-            </div>
+              </Link>
+            )}
           </div>
         </div>
       )}

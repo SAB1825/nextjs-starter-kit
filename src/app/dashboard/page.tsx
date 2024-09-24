@@ -5,7 +5,6 @@ import { BarChart, DollarSign, Users } from "lucide-react"
 
 const DashboardPage = async () => {
   const user = await currentUser();
-
   const stats = [
     { title: "Total Revenue", value: "$45,231.89", icon: DollarSign },
     { title: "Subscriptions", value: "2,350", icon: Users },
