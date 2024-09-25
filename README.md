@@ -8,7 +8,7 @@ This is a powerful and versatile starter kit for building modern web application
 - [Clerk](https://clerk.dev/) - Complete user management and authentication solution with custom sign-in and sign-up page.
 - [MongoDB](https://www.mongodb.com/) - NoSQL database for flexible and scalable data storage
 - Next.js API Routes - Built-in API solution for handling backend logic
-
+## DEMO : (https://nextjs-starter.sabaris.site)
 ## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
