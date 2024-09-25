@@ -73,7 +73,7 @@ export default function Home() {
           </motion.div>
 
           <motion.div className="text-center" variants={itemVariants}>
-            <Link href="/docs">
+            <Link href="https://github.com/SAB1825/nextjs-starter-kit/blob/main/README.md">
               <motion.button
                 className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300"
                 onMouseEnter={() => setIsHovered(true)}
