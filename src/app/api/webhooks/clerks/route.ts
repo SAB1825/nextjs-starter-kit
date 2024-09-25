@@ -85,7 +85,6 @@ export async function POST(req: Request) {
       ...(image_url ? { imageUrl: image_url } : {})
     }
 
-    // Update the user in the database by `clerkUserId`
     const result = await UpdateUser(id, updatedData)
 
     if (result.error) {
