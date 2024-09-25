@@ -107,7 +107,7 @@ Update your .env.local file with the webhook signing secret provided by Clerk:
 CLERK_WEBHOOK_SECRET=your_webhook_signing_secret
 ```
 
-Implement your webhook handler in the appropriate API route (e.g., pages/api/clerk-webhook.js).
+Implement your webhook handler in the appropriate API route (e.g., pages/api/webhooks/clerk).
 
 Remember to restart your ngrok tunnel each time you run your local server, as the URL will change.
 💾 Database
